@@ -34,6 +34,15 @@ public static class EffectDescriptionExtensions
                 entity.SetDurationParameter(duration.Value);
                 break;
 
+            case DurationType.Instantaneous:
+            case DurationType.Dispelled:
+            case DurationType.Permanent:
+            case DurationType.Irrelevant:
+            case DurationType.UntilShortRest:
+            case DurationType.UntilLongRest:
+            case DurationType.UntilAnyRest:
+            case DurationType.Deprecated_Turn:
+            case DurationType.HalfClassLevelHours:
             default:
                 if (duration != null)
                 {
@@ -71,7 +80,9 @@ public static class EffectDescriptionExtensions
                 entity.SetRangeParameter(range ?? 0);
                 break;
 
-            default: // Self, MeleeHit
+            case RangeType.Self:
+            case RangeType.MeleeHit:
+            default:
                 if (range != null)
                 {
                     throw new SolastaCommunityExpansionException(
@@ -101,6 +112,20 @@ public static class EffectDescriptionExtensions
     {
         entity.EffectForms.AddRange(value);
         return entity;
+    }
+
+    public static DamageForm FindLastDamageForm([NotNull] this EffectDescription entity)
+    {
+        DamageForm form = null;
+        foreach (var effectForm in entity.effectForms)
+        {
+            if (effectForm.FormType == EffectForm.EffectFormType.Damage)
+            {
+                form = effectForm.DamageForm;
+            }
+        }
+
+        return form;
     }
 
     [NotNull]

@@ -1,5 +1,4 @@
 ﻿#if DEBUG
-using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using SolastaCommunityExpansion.Api.Infrastructure;
@@ -43,7 +42,6 @@ namespace SolastaCommunityExpansion.Api.Diagnostics
             this.typeName = typeName;
         }
 
-        [Conditional("DEBUG")]
         public void Log(string message)
         {
             Main.Log($"{typeName}.{methodName}: {message}");

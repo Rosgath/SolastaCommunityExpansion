@@ -4,6 +4,7 @@ using SolastaCommunityExpansion.Api.Extensions;
 using SolastaCommunityExpansion.Builders;
 using SolastaCommunityExpansion.Builders.Features;
 using SolastaCommunityExpansion.Classes.Monk;
+using SolastaCommunityExpansion.CustomDefinitions;
 using SolastaCommunityExpansion.ItemCrafting;
 using SolastaCommunityExpansion.Properties;
 using SolastaCommunityExpansion.Utils;
@@ -23,6 +24,7 @@ public static class CustomWeaponsContext
     public static ItemDefinition Pike, PikePrimed, PikePlus1, PikePlus2, PikePsychic;
     public static ItemDefinition LongMace, LongMacePrimed, LongMacePlus1, LongMacePlus2, LongMaceThunder;
     public static ItemDefinition HandXbow, HandXbowPrimed, HandXbowPlus1, HandXbowPlus2, HandXbowAcid;
+    public static ItemDefinition ProducedFlameDart;
 
     public static readonly MerchantFilter GenericMelee = new() {IsMeleeWeapon = true};
     public static readonly MerchantFilter MagicMelee = new() {IsMagicalMeleeWeapon = true};
@@ -58,6 +60,7 @@ public static class CustomWeaponsContext
         BuildPikes();
         BuildLongMaces();
         BuildHandXbow();
+        WeaponizeProducedFlame();
         AddToShops();
         AddToEditor();
 
@@ -143,6 +146,8 @@ public static class CustomWeaponsContext
 
     private static void BuildHandwraps()
     {
+        ItemDefinitions.UnarmedStrikeBase.WeaponDescription.WeaponTags.Add(TagsDefinitions.WeaponTagLight);
+
         HandwrapsPlus1 = BuildHandwrapsCommon("Handwraps+1", 400, true, true, Uncommon, WeaponPlus1);
         HandwrapsPlus2 = BuildHandwrapsCommon("Handwraps+2", 1500, true, true, Rare, WeaponPlus2);
 
@@ -163,7 +168,7 @@ public static class CustomWeaponsContext
             .SetSaveDC(-1)
             .AddFunctions(new DeviceFunctionDescriptionBuilder()
                 .SetPower(FeatureDefinitionPowerBuilder
-                    .Create("PowerFunctionHandwrapsOfPulling", Monk.GUID)
+                    .Create("PowerFunctionHandwrapsOfPulling", Monk.Guid)
                     .SetGuiPresentation(Category.Power)
                     .SetActivationTime(RuleDefinitions.ActivationTime.BonusAction)
                     .SetUsesFixed(1)
@@ -190,17 +195,17 @@ public static class CustomWeaponsContext
                 .Build())
             .Build();
 
-        ShopItems.Add((BuildManual(BuildRecipe(HandwrapsPlus1, 24, 10, Monk.GUID,
-            ItemDefinitions.Ingredient_Enchant_Oil_Of_Acuteness), Monk.GUID), ShopCrafting));
+        ShopItems.Add((BuildManual(BuildRecipe(HandwrapsPlus1, 24, 10, Monk.Guid,
+            ItemDefinitions.Ingredient_Enchant_Oil_Of_Acuteness), Monk.Guid), ShopCrafting));
 
-        ShopItems.Add((BuildManual(BuildRecipe(HandwrapsPlus2, 48, 16, Monk.GUID,
-            ItemDefinitions.Ingredient_Enchant_Blood_Gem), Monk.GUID), ShopCrafting));
+        ShopItems.Add((BuildManual(BuildRecipe(HandwrapsPlus2, 48, 16, Monk.Guid,
+            ItemDefinitions.Ingredient_Enchant_Blood_Gem), Monk.Guid), ShopCrafting));
 
-        ShopItems.Add((BuildManual(BuildRecipe(HandwrapsOfForce, 48, 16, Monk.GUID,
-            ItemDefinitions.Ingredient_Enchant_Soul_Gem), Monk.GUID), ShopCrafting));
+        ShopItems.Add((BuildManual(BuildRecipe(HandwrapsOfForce, 48, 16, Monk.Guid,
+            ItemDefinitions.Ingredient_Enchant_Soul_Gem), Monk.Guid), ShopCrafting));
 
-        ShopItems.Add((BuildManual(BuildRecipe(HandwrapsOfPulling, 48, 16, Monk.GUID,
-            ItemDefinitions.Ingredient_Enchant_Slavestone), Monk.GUID), ShopCrafting));
+        ShopItems.Add((BuildManual(BuildRecipe(HandwrapsOfPulling, 48, 16, Monk.Guid,
+            ItemDefinitions.Ingredient_Enchant_Slavestone), Monk.Guid), ShopCrafting));
     }
 
     private static ItemDefinition BuildHandwrapsCommon(string name, int goldCost, bool noDescription, bool needId,
@@ -472,6 +477,10 @@ public static class CustomWeaponsContext
         damageForm.dieType = RuleDefinitions.DieType.D6;
         damageForm.diceNumber = 1;
 
+        //add hand xbow proficiency to rogues
+        var rogueHandXbowProficiency = FeatureDefinitionProficiencys.ProficiencyRogueWeapon;
+        rogueHandXbowProficiency.Proficiencies.Add(HandXbowWeaponType.Name);
+
         HandXbow = BuildWeapon("CEHandXbow", baseItem,
             20, true, Common, basePresentation, baseDescription, HandXbowIcon,
             twoHanded: false);
@@ -521,6 +530,38 @@ public static class CustomWeaponsContext
                 HandXbowPrimed,
                 ItemDefinitions.Ingredient_Enchant_Stardust),
             ShopCrafting));
+    }
+
+    private static void WeaponizeProducedFlame()
+    {
+        var flame = ItemDefinitions.ProducedFlame;
+        flame.GuiPresentation = new GuiPresentationBuilder(flame.GuiPresentation)
+            .SetTitle("Item/&CEProducedFlameTitle")
+            .Build();
+
+        ProducedFlameDart = BuildWeapon("CEProducedFlameDart", ItemDefinitions.Dart, 0, true, Common,
+            flame.ItemPresentation, icon: ProducedFlameThrow);
+
+        var damageForm = ProducedFlameDart.WeaponDescription.EffectDescription.FindFirstDamageForm();
+        damageForm.damageType = RuleDefinitions.DamageTypeFire;
+        damageForm.dieType = RuleDefinitions.DieType.D8;
+
+        var weapon = new WeaponDescription(ItemDefinitions.UnarmedStrikeBase.weaponDefinition);
+        weapon.EffectDescription.AddEffectForms(new EffectFormBuilder()
+            .SetDamageForm(dieType: RuleDefinitions.DieType.D8, diceNumber: 1,
+                damageType: RuleDefinitions.DamageTypeFire)
+            .Build());
+        flame.staticProperties.Add(BuildFrom(FeatureDefinitionBuilder
+            .Create("CEProducedFlameThrower", DefinitionBuilder.CENamespaceGuid)
+            .SetGuiPresentationNoContent()
+            .SetCustomSubFeatures(
+                new ModifyProducedFlameDice(),
+                new AddThrowProducedFlameAttack()
+            )
+            .AddToDB(), false, EquipmentDefinitions.KnowledgeAffinity.ActiveAndHidden));
+
+        flame.IsWeapon = true;
+        flame.weaponDefinition = weapon;
     }
 
     private static void AddToShops()
@@ -648,6 +689,34 @@ public static class CustomWeaponsContext
         return BuildPrimingManual(item, primed, DefinitionBuilder.CENamespaceGuid);
     }
 
+    public static void ProcessProducedFlameAttack(RulesetCharacterHero hero, RulesetAttackMode mode)
+    {
+        var num = hero.characterInventory.CurrentConfiguration;
+        var configurations = hero.characterInventory.WieldedItemsConfigurations;
+        if (num == configurations.Count - 1)
+        {
+            num = configurations[num].MainHandSlot.ShadowedSlot != configurations[0].MainHandSlot ? 1 : 0;
+        }
+
+        var itemsConfiguration = configurations[num];
+        RulesetItem item = null;
+        if (mode.SlotName == EquipmentDefinitions.SlotTypeMainHand)
+        {
+            item = itemsConfiguration.MainHandSlot.EquipedItem;
+        }
+        else if (mode.SlotName == EquipmentDefinitions.SlotTypeOffHand)
+        {
+            item = itemsConfiguration.OffHandSlot.EquipedItem;
+        }
+
+        if (item == null || item.ItemDefinition != ItemDefinitions.ProducedFlame)
+        {
+            return;
+        }
+
+        hero.CharacterInventory.DefineWieldedItemsConfiguration(num, null, mode.SlotName);
+    }
+
     #region Halberd Icons
 
     private static AssetReferenceSprite _halberdIcon,
@@ -747,6 +816,15 @@ public static class CustomWeaponsContext
         CustomIcons.CreateAssetReferenceSprite("HandXbowAcid", Resources.HandXbowAcid, 128);
 
     #endregion
+
+    #region Produced Flame Icons
+
+    private static AssetReferenceSprite _producedFlameThrow;
+
+    private static AssetReferenceSprite ProducedFlameThrow => _producedFlameThrow ??=
+        CustomIcons.CreateAssetReferenceSprite("ProducedFlameThrow", Resources.ProducedFlameThrow, 128);
+
+    #endregion
 }
 
 //TODO: move this to the separate shop context file
@@ -793,6 +871,75 @@ public class MerchantFilter
                (IsPrimedMeleeWeapon == null || IsPrimedMeleeWeapon == merchantType.IsPrimedMeleeWeapon) &&
                (IsPrimedRangeWeapon == null || IsPrimedRangeWeapon == merchantType.IsPrimedRangeWeapon) &&
                (IsRangeWeapon == null || IsRangeWeapon == merchantType.IsRangeWeapon);
+    }
+}
+
+public class ModifyProducedFlameDice : ModifyAttackModeForWeaponBase
+{
+    public ModifyProducedFlameDice() : base((_, weapon, _) =>
+        weapon != null && weapon.ItemDefinition == ItemDefinitions.ProducedFlame)
+    {
+    }
+
+    protected override void TryModifyAttackMode(RulesetCharacter character, RulesetAttackMode attackMode,
+        RulesetItem weapon)
+    {
+        var damage = attackMode.EffectDescription.FindLastDamageForm();
+        if (damage != null)
+        {
+            var casterLevel = character.GetAttribute(AttributeDefinitions.CharacterLevel).CurrentValue;
+            damage.diceNumber = 1 + RuleDefinitions.SpellAdvancementByCasterLevel[casterLevel - 1];
+        }
+    }
+}
+
+public class AddThrowProducedFlameAttack : AddExtraAttackBase
+{
+    public AddThrowProducedFlameAttack() : base(ActionDefinitions.ActionType.Main, false)
+    {
+    }
+
+    protected override List<RulesetAttackMode> GetAttackModes(RulesetCharacterHero hero)
+    {
+        var result = new List<RulesetAttackMode>();
+        AddItemAttack(result, EquipmentDefinitions.SlotTypeMainHand, hero);
+        AddItemAttack(result, EquipmentDefinitions.SlotTypeOffHand, hero);
+        return result;
+    }
+
+    private void AddItemAttack(List<RulesetAttackMode> attackModes, string slot, RulesetCharacterHero hero)
+    {
+        var item = hero.CharacterInventory.InventorySlotsByName[slot].EquipedItem;
+        if (item == null || item.ItemDefinition != ItemDefinitions.ProducedFlame)
+        {
+            return;
+        }
+
+        var strikeDefinition = CustomWeaponsContext.ProducedFlameDart;
+
+        var action = slot == EquipmentDefinitions.SlotTypeOffHand
+            ? ActionDefinitions.ActionType.Bonus
+            : ActionDefinitions.ActionType.Main;
+
+        var attackMode = hero.RefreshAttackMode(
+            action,
+            strikeDefinition,
+            strikeDefinition.WeaponDescription,
+            false,
+            false,
+            slot,
+            hero.attackModifiers,
+            hero.FeaturesOrigin,
+            item
+        );
+
+        attackMode.closeRange = attackMode.maxRange = 6;
+        attackMode.Reach = false;
+        attackMode.Ranged = true;
+        attackMode.Thrown = true;
+        attackMode.AttackTags.Remove(TagsDefinitions.WeaponTagMelee);
+
+        attackModes.Add(attackMode);
     }
 }
 

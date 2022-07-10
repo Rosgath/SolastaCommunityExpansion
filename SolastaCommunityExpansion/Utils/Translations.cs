@@ -58,36 +58,6 @@ public static class Translations
         return builder.ToString();
     }
 
-    private static string TranslateBaidu(string sourceText, string targetCode)
-    {
-        const string BASE_URL = "https://api.fanyi.baidu.com/api/trans/vip/translate";
-
-        var encoded = HttpUtility.UrlEncode(sourceText);
-        var r = new Random();
-        var salt = "";
-
-        for (var i = 0; i < 9; i++)
-        {
-            salt += r.Next(1, 11);
-        }
-
-        try
-        {
-            var sign = "20181009000216890" + sourceText + salt + "TcAihQsIFCsOdnA14NyA";
-            var signHash = GetMd5Hash(sign).ToLower();
-            var finalUrl =
-                $"{BASE_URL}?appid=20181009000216890&from=en&to={targetCode}&q={encoded}&salt={salt}&sign={signHash}";
-            var payload = GetPayload(finalUrl);
-            var json = JsonConvert.DeserializeObject<Model>(payload);
-
-            return json.trans_result.First().dst;
-        }
-        catch
-        {
-            return sourceText;
-        }
-    }
-
     private static string TranslateGoogle(string sourceText, string targetCode)
     {
         const string BASE = "https://translate.googleapis.com/translate_a/single";
@@ -119,6 +89,11 @@ public static class Translations
 
     internal static string Translate([NotNull] string sourceText, string targetCode)
     {
+        if (sourceText == string.Empty)
+        {
+            return string.Empty;
+        }
+
         var md5 = GetMd5Hash(sourceText);
 
         if (TranslationsCache.TryGetValue(md5, out var cachedTranslation))
@@ -126,12 +101,7 @@ public static class Translations
             return cachedTranslation;
         }
 
-        var translation = Main.Settings.TranslationEngine switch
-        {
-            Engine.Baidu => TranslateBaidu(sourceText, targetCode),
-            Engine.Google => TranslateGoogle(sourceText, targetCode),
-            _ => sourceText
-        };
+        var translation = TranslateGoogle(sourceText, targetCode);
 
         TranslationsCache.Add(md5, translation);
 
@@ -153,9 +123,9 @@ public static class Translations
         {
             try
             {
-                var splitted = line.Split(new[] {'\t'}, 2);
+                var columns = line.Split(new[] {'='}, 2);
 
-                words.Add(splitted[0], splitted[1]);
+                words.Add(columns[0], columns[1]);
             }
             catch
             {
@@ -167,13 +137,17 @@ public static class Translations
     }
 
     [ItemCanBeNull]
-    internal static IEnumerable<string> GetTranslations(string languageCode)
+#if DEBUG
+    internal
+#else
+    private
+#endif
+        static IEnumerable<string> GetTranslations(string languageCode)
     {
         using var zipStream = new MemoryStream(Resources.Translations);
         using var zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
 
         foreach (var entry in zip.Entries
-                     .Where(x => x.FullName.StartsWith(languageCode))
                      .Where(x => x.FullName.EndsWith($"{languageCode}.txt")))
         {
             using var dataStream = entry.Open();
@@ -208,13 +182,21 @@ public static class Translations
             var term = split[0];
             var text = split[1];
 
+            if (term == string.Empty)
+            {
+                continue;
+            }
+
             text = Glossary.Aggregate(text, (current, kvp) => current.Replace(kvp.Key, kvp.Value));
 
             var termData = languageSourceData.GetTermData(term);
 
-            if (termData != null && termData.Languages[languageIndex] != null)
+            if (termData?.Languages[languageIndex] != null)
             {
-                Main.Log($"term {term} overwritten with text {text}");
+                if (languageIndex == 0)
+                {
+                    Main.Logger.Log($"term {term} overwritten with text {text}");
+                }
 
                 termData.Languages[languageIndex] = text;
             }
@@ -223,18 +205,5 @@ public static class Translations
                 languageSourceData.AddTerm(term).Languages[languageIndex] = text;
             }
         }
-    }
-
-    public sealed class Model
-    {
-        public string from { get; set; }
-        public string to { get; set; }
-        public List<ResultModel> trans_result { get; set; }
-    }
-
-    public class ResultModel
-    {
-        public string src { get; set; }
-        public string dst { get; set; }
     }
 }

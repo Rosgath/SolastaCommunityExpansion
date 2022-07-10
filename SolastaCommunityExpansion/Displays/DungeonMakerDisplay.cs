@@ -31,20 +31,6 @@ internal static class DungeonMakerDisplay
             Main.Settings.AllowGadgetsAndPropsToBePlacedAnywhere = toggle;
         }
 
-        UI.Label("");
-
-        toggle = Main.Settings.UnleashNpcAsEnemy;
-        if (UI.Toggle(Gui.Localize("ModUi/&UnleashNpcAsEnemy"), ref toggle))
-        {
-            Main.Settings.UnleashNpcAsEnemy = toggle;
-        }
-
-        toggle = Main.Settings.UnleashEnemyAsNpc;
-        if (UI.Toggle(Gui.Localize("ModUi/&UnleashEnemyAsNpc"), ref toggle))
-        {
-            Main.Settings.UnleashEnemyAsNpc = toggle;
-        }
-
         #endregion
 
         UI.Label("");
@@ -60,6 +46,20 @@ internal static class DungeonMakerDisplay
         UI.Label(Gui.Localize("ModUi/&AdvancedHelp"));
         UI.Label("");
 
+        toggle = Main.Settings.UnleashNpcAsEnemy;
+        if (UI.Toggle(Gui.Localize("ModUi/&UnleashNpcAsEnemy"), ref toggle))
+        {
+            Main.Settings.UnleashNpcAsEnemy = toggle;
+        }
+
+        toggle = Main.Settings.UnleashEnemyAsNpc;
+        if (UI.Toggle(Gui.Localize("ModUi/&UnleashEnemyAsNpc"), ref toggle))
+        {
+            Main.Settings.UnleashEnemyAsNpc = toggle;
+        }
+
+        UI.Label("");
+
         toggle = Main.Settings.EnableDungeonMakerModdedContent;
         if (UI.Toggle(Gui.Localize("ModUi/&EnableDungeonMakerModdedContent"), ref toggle))
         {
@@ -70,12 +70,12 @@ internal static class DungeonMakerDisplay
         UI.Label("");
         UI.Label("");
 
-        toggle = Main.Settings.EnableExtraHighLevelMonsters;
-        if (UI.Toggle(Gui.Localize("ModUi/&EnableExtraHighLevelMonsters"), ref toggle))
-        {
-            Main.Settings.EnableExtraHighLevelMonsters = toggle;
-        }
+        // toggle = Main.Settings.EnableExtraHighLevelMonsters;
+        // if (UI.Toggle(Gui.Localize("ModUi/&EnableExtraHighLevelMonsters"), ref toggle))
+        // {
+        //     Main.Settings.EnableExtraHighLevelMonsters = toggle;
+        // }
 
-        UI.Label("");
+        // UI.Label("");
     }
 }

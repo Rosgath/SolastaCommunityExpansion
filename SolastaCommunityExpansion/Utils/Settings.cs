@@ -151,6 +151,7 @@ public class Settings : UnityModManager.ModSettings
     public bool OnlyShowMostPowerfulUpcastConjuredElementalOrFey { get; set; }
     public bool FixSorcererTwinnedLogic { get; set; }
     public bool FullyControlConjurations { get; set; }
+    public bool ApplySrdWeightToFoodRations { get; set; }
 
     // House
     public bool ChangeSleetStormToCube { get; set; }
@@ -192,8 +193,8 @@ public class Settings : UnityModManager.ModSettings
 
     // Crafting
     public List<string> CraftingInStore { get; } = new();
-    public List<string> CraftingItemsInDM { get; } = new();
-    public List<string> CraftingRecipesInDM { get; } = new();
+    public List<string> CraftingItemsInDm { get; } = new();
+    public List<string> CraftingRecipesInDm { get; } = new();
 
     // Merchants
     public bool StockGorimStoreWithAllNonMagicalClothing { get; set; }
@@ -210,15 +211,15 @@ public class Settings : UnityModManager.ModSettings
 
     // General
     public bool EnableSaveByLocation { get; set; }
-    public bool EnableCharacterChecker { get; set; }
     public bool EnableRespec { get; set; }
     public bool EnableCheatMenu { get; set; }
     public bool OverrideMinMaxLevel { get; set; }
     public bool EnableTogglesToOverwriteDefaultTestParty { get; set; }
     public List<string> defaultPartyHeroes = new();
     public bool NoExperienceOnLevelUp { get; set; }
-    public int OverridePartySize { get; set; } = DungeonMakerContext.GAME_PARTY_SIZE;
+    public int ScaleGameFontSizeBy { get; set; } = 100;
     public int MultiplyTheExperienceGainedBy { get; set; } = 100;
+    public int OverridePartySize { get; set; } = DungeonMakerContext.GAME_PARTY_SIZE;
     public int MaxBackupFilesPerLocationCampaign { get; set; } = 10;
 
     // Debug
@@ -240,11 +241,6 @@ public class Settings : UnityModManager.ModSettings
     public bool UnleashNpcAsEnemy { get; set; }
     public bool UnleashEnemyAsNpc { get; set; }
     public bool EnableDungeonMakerModdedContent { get; set; }
-#if DEBUG
-    public bool EnableExtraHighLevelMonsters { get; set; } = true; // simplifies diags. creation (one less boot)
-#else
-    public bool EnableExtraHighLevelMonsters { get; set; }
-#endif
 
     //
     // Interface - Game UI
@@ -263,7 +259,7 @@ public class Settings : UnityModManager.ModSettings
     public bool EnableStatsOnHeroTooltip { get; set; }
     public bool EnableAdditionalIconsOnLevelMap { get; set; }
     public bool MarkInvisibleTeleportersOnLevelMap { get; set; }
-    public bool HideExitAndTeleporterGizmosIfNotDiscovered { get; set; }
+    public bool HideExitsAndTeleportersGizmosIfNotDiscovered { get; set; }
 
     // Inventory and Items
     public bool EnableInventoryFilteringAndSorting { get; set; }
@@ -295,6 +291,7 @@ public class Settings : UnityModManager.ModSettings
     public bool EnableCtrlClickBypassAttackReactionPanel { get; set; }
     public bool EnableIgnoreCtrlClickOnCriticalHit { get; set; }
     public bool EnableCtrlClickOnlySwapsMainHand { get; set; }
+    public bool EnableGamepad { get; set; }
 
     //
     // Interface - Translations

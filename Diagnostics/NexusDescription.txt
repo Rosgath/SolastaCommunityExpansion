@@ -11,6 +11,7 @@ This is a collection of work from the Solasta modding community. It includes mul
 [*][b]Bazou[/b]: Witch class, fighting styles
 [*][b]Boofat[/b]: alwaysAlt
 [*][b]ChrisJohnDigital[/b]: Tinkerer class, crafting, faction relations, feats, fighting styles, items, subclasses, progression
+[*][b]DemonSlayer730[/b]: Path of the Rage Mage subclass
 [*][b]Dreadmaker[/b]: Forest Guardian subclass
 [*][b]DubhHerder[/b]: high level spells, feats, bug models replacement, high level monsters, Warlock class and subclasses
 [*][b]ElAntonious[/b]: Arcanist subclass, feats
@@ -19,20 +20,16 @@ This is a collection of work from the Solasta modding community. It includes mul
 [*][b]ImpPhil[/b]: adv/dis rules, conjurations control, auto-equip, monster's health, pause UI, sorting, stocks prices, no attunement, xp scaling, character export, save by location, combat camera, diagnostics, custom icons, refactor, screen map
 [*][b]Nd[/b]: Marshal and Opportunist subclasses
 [*][b]RedOrca[/b]: Path of the Light subclass, Indomitable Might
-[*][b]SilverGriffon[/b]: pick pocket, lore friendly names, feats, face unlocks, sylvan armor unlock, empress garb skins, arcane foci items, belt of dwarvenkin, merchants, spells, DarkElf race
-[*][b]Spacehamster[/b]: dataminer
+[*][b]SilverGriffon[/b]: pick pocket, lore friendly names, feats, face unlocks, sylvan armor unlock, empress garb skins, arcane foci items, belt of dwarvenkin, merchants, spells, Dark Elf race, Divine Heart subclass
 [*][b]TPABOBAP[/b]: Monk class and subclasses, Warlock improvements, Tinkerer improvements, custom level up, feats, spells, infrastructure patches, Holic75's code integration
 [*][b]View619[/b]: Darkvision, Superior Dark Vision
 [*][b]Vylantze[/b]: English terms review, tweaks, bug fixes
 [*][b]Zappastuff[/b]: repository maintenance, translations, multiclass, level 20, respec, level down, default party, encounters, dungeon maker pro, party size, screen gadgets highlights, inventory sorting, epic points, teleport, mod UI, diagnostics, feats, pact magic, infrastructure patches, Half-elf Variants, Holic75's code integration
-[*][b][/b]: 
 [*][b]Esker[/b]: ruleset support, classes design, quality assurance
 [*][b]Lyraele[/b]: ruleset support, classes design, quality assurance
 [*][b]PraiseThyBus[/b]: quality assurance
-[*][b][/b]: 
 [*][b]Nyowwww[/b]: Chinese translations
 [*][b]Prioritizer[/b]: Russian translations
-[*][b]Burtsev-Alexey[/b]: deep copy algorithm
 [*][b]Narria[/b]: modKit creator, developer
 [*][b]Sinai-dev[/b]: Unity Explorer UI standalone
 [/list]
@@ -144,6 +141,7 @@ All settings start disabled by default. On first start the mod will display an w
 [*][b]Blaster[/b]: You specialize in hurling projectiles and causing explosions.
 [*][b]Weapon Smith[/b]: You specialize in using magical weapons in combat.
 [*][b]Scout Sentinel[/b]: A Scout Sentinel Tinkerer modifies armor to enhance it's function, providing enhanced protection and mobility.
+[*][b]Rift Walker Pact[/b]: Your patron is one of the rare beings who calls the void between worlds their home. They slip between the planes with ease and the knowledge you have gained from interacting with them allows you to harness lingering rift energies to your benefit within solasta. You might be sometimes filled with a longing for the distant realm of your patron, a desire to wander between dimensions for the rest of your days, or watch for signs of another Rift event, either to prevent or encourage.
 [*][b]Soulblade Pact[/b]: You have struck a bargain with a sentient weapon that you feed souls to in return for power.
 [*][b]Ancient Forest Pact[/b]: You have forged a relationship with a powerful nature entity: Ancient Dryads, Archdruids, Manifestations of the Feywild bleeding into the material plane, Forgotten gods from a primal age. Your patron may wish for you to protect the natural world, travel to far off lands that it cannot, or it may have another motive that seems inscrutable to short-lived mortals.
 [*][b]Elementalist Pact[/b]: You've been made a pact with and been changed by primordials present in the elemental badlands. The elemental chaos of the patron has suffused your soul, letting you use the power of different elemental types.
@@ -164,6 +162,7 @@ All settings start disabled by default. On first start the mod will display an w
 [*][b]Oath of Retribution[/b]: Paladins who swear the Oath of Retribution fully commit themselves to terminate the unholiness and injustice with extreme prejudice. For these paladins, the duty of avenging sins and corruptions weighs greater than their own values.
 [*][b]Opportunist[/b]: Opportunist are those who never let a chance to finish their enemies slide. They stab fast and stab where it matters. Not many faced them can escaped unscratched.
 [*][b]Path of the Light[/b]: Barbarians who follow the Path of the Light illuminate the darkness and protect their allies from dangers that lurk within it.
+[*][b]Path Of The Rage Mage[/b]: Path Of The Rage Mage Barbarians are Barbarians who possess the spark of arcane talent. They learn to channel their brute ferocity through magic.
 [*][b]Ranger Arcanist[/b]: The Ranger Arcanist melds their Ranger skills with arcane abilities. Their weapons can afflict their opponents with the Arcanist's Mark, and have learned how to cast some Wizard spells as part of their Ranger spell repertoire.
 [*][b]Royal Knight[/b]: A knight who inspires greatness in others by committing brave deeds in battle. A lone knight is a skilled warrior, but one leading a band of allies can transform even the most poorly equipped militia into a ferocious war band.
 [*][b]Spell Master[/b]: Spell masters immerse themselves in magic and try to learn every spell they can get their hands on. They are unmatched in their spell knowledge.
@@ -185,6 +184,12 @@ While you are not wearing any armor, your AC equals 10 + your Dexterity modifier
 [*][b]Brutal Thug[/b]: You land powerful blows in the right places.
 You gain simple and martial weapon proficiencies.
 You can sneak attack using martial weapons.
+[*][b]Celestial Touched (Charisma)[/b]: Increase your Charisma attribute by 1, to a maximum of 20.
+You gain the ability to cast the bless, cure wounds and lesser restoration spells once per long rest and you can cast these spells with your spell slots.
+[*][b]Celestial Touched (Intelligence)[/b]: Increase your Intelligence attribute by 1, to a maximum of 20.
+You gain the ability to cast the bless, cure wounds and lesser restoration spells once per long rest and you can cast these spells with your spell slots.
+[*][b]Celestial Touched (Wisdom)[/b]: Increase your Wisdom attribute by 1, to a maximum of 20.
+You gain the ability to cast the bless, cure wounds and lesser restoration spells once per long rest and you can cast these spells with your spell slots.
 [*][b]Charismatic Defense[/b]: Increase your Charisma by 1, to a maximum of 20.
 While you are not wearing any armor, your AC equals 10 + your Dexterity modifier + your Charisma modifier.
 [*][b]Charismatic Precision[/b]: You can use a bonus action to select a weapon. Its attacks count as magical and you use your Charisma for your attack and damage rolls for 1 minute. This feature can be used twice per long rest.
@@ -235,7 +240,7 @@ You gain proficiency with smith's tools, or expertise if you are already profici
 [*][b]Light Armor[/b]: Increase your Strength by 1, to a maximum of 20.
 You gain proficiency with light armor.
 [*][b]Manacalon Crafter[/b]: Increase your Intelligence by 1, to a maximum of 20.
-You gain proficiency with manacolon rosary and Arcana, or expertise if already proficient.
+You gain proficiency with manacalon rosary and Arcana, or expertise if already proficient.
 Requires the ability to cast spells.
 [*][b]Marksman[/b]: When an opponent you can see attacks you with a ranged weapon or a spell and is at least 10 ft away from you, you can use your reaction to make a ranged weapon attack after the triggering attack finishes.
 [*][b]Medium Armor (Dexterity)[/b]: Increase your Dexterity by 1, to a maximum of 20.
@@ -435,3 +440,4 @@ The cloud moves 10 feet directly away from you in a direction that you choose at
 [line]
 [img]https://github.com/SolastaMods/SolastaCommunityExpansion/blob/master/Media/15-CreditsDiagnostics-Credits.png?raw=true[/img]
 [line]
+

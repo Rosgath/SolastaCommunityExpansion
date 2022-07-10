@@ -23,7 +23,8 @@ internal static class CharacterInformationPanel_EnumerateFeatures
     {
         choiceFeature = null;
 
-        foreach (var featureDefinition in panel.InspectedCharacter.MainClassDefinition.FeatureUnlocks.Select(featureUnlock => featureUnlock.FeatureDefinition))
+        foreach (var featureDefinition in panel.InspectedCharacter.MainClassDefinition.FeatureUnlocks.Select(
+                     featureUnlock => featureUnlock.FeatureDefinition))
         {
             switch (featureDefinition)
             {
@@ -31,7 +32,10 @@ internal static class CharacterInformationPanel_EnumerateFeatures
                     choiceFeature = featureDefinition;
 
                     return true;
-                case FeatureDefinitionFeatureSet {Mode: FeatureDefinitionFeatureSet.FeatureSetMode.Exclusion} definitionFeatureSet when definitionFeatureSet.FeatureSet.Contains(subFeature):
+                case FeatureDefinitionFeatureSet
+                {
+                    Mode: FeatureDefinitionFeatureSet.FeatureSetMode.Exclusion
+                } definitionFeatureSet when definitionFeatureSet.FeatureSet.Contains(subFeature):
                     choiceFeature = featureDefinition;
 
                     return true;
@@ -129,7 +133,7 @@ internal static class CharacterInformationPanel_Bind
 
     internal static void Postfix(CharacterInformationPanel __instance)
     {
-        if (!Main.Settings.EnableEnhancedCharacterInspection)
+        if (!Main.Settings.EnableEnhancedCharacterInspection || Main.Settings.EnableGamepad)
         {
             return;
         }

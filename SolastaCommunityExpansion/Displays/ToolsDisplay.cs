@@ -92,12 +92,6 @@ internal static class ToolsDisplay
             Main.Settings.EnableSaveByLocation = toggle;
         }
 
-        toggle = Main.Settings.EnableCharacterChecker;
-        if (UI.Toggle(Gui.Localize("ModUi/&EnableCharacterChecker"), ref toggle, UI.AutoWidth()))
-        {
-            Main.Settings.EnableCharacterChecker = toggle;
-        }
-
         toggle = Main.Settings.EnableCheatMenu;
         if (UI.Toggle(Gui.Localize("ModUi/&EnableCheatMenu"), ref toggle, UI.AutoWidth()))
         {
@@ -109,6 +103,15 @@ internal static class ToolsDisplay
         {
             Main.Settings.EnableRespec = toggle;
             RespecContext.Switch();
+        }
+
+        UI.Label("");
+
+        intValue = Main.Settings.ScaleGameFontSizeBy;
+        if (UI.Slider(Gui.Localize("ModUi/&ScaleGameFontSizeBy"), ref intValue, 80, 120, 100, "",
+                UI.Width(100)))
+        {
+            Main.Settings.ScaleGameFontSizeBy = intValue;
         }
 
         UI.Label("");
@@ -196,14 +199,7 @@ internal static class ToolsDisplay
 
                 var title = faction.FormatTitle();
 
-                if (flip)
-                {
-                    title = title.Yellow();
-                }
-                else
-                {
-                    title = title.White();
-                }
+                title = flip ? title.Yellow() : title.White();
 
                 intValue = gameFactionService.FactionRelations[faction.Name];
 

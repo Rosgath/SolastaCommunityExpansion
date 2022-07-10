@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
 namespace SolastaCommunityExpansion.Feats;
 
@@ -10,6 +11,7 @@ internal static class FeatsValidations
     // validation routines for FeatDefinitionWithPrerequisites
     //
 
+    [NotNull]
     internal static Func<FeatDefinition, RulesetCharacterHero, (bool result, string output)> ValidateMinCharLevel(
         int minCharLevel)
     {
@@ -28,8 +30,9 @@ internal static class FeatsValidations
         };
     }
 
+    [NotNull]
     internal static Func<FeatDefinition, RulesetCharacterHero, (bool result, string output)> ValidateNotClass(
-        CharacterClassDefinition characterClassDefinition)
+        [NotNull] CharacterClassDefinition characterClassDefinition)
     {
         var className = characterClassDefinition.Name;
 
@@ -37,16 +40,13 @@ internal static class FeatsValidations
         {
             var isNotClass = !hero.ClassesAndLevels.ContainsKey(characterClassDefinition);
 
-            if (isNotClass)
-            {
-                return (true, Gui.Localize($"Tooltip/&FeatPrerequisiteIsNot{className}"));
-            }
-
-            return (false, Gui.Colorize(Gui.Localize($"Tooltip/&FeatPrerequisiteIsNot{className}"), "EA7171"));
+            return isNotClass
+                ? (true, Gui.Localize($"Tooltip/&FeatPrerequisiteIsNot{className}"))
+                : (false, Gui.Colorize(Gui.Localize($"Tooltip/&FeatPrerequisiteIsNot{className}"), "EA7171"));
         };
     }
 
-    internal static (bool, string) ValidateHasStealthAttack(FeatDefinition _, RulesetCharacterHero hero)
+    internal static (bool, string) ValidateHasStealthAttack(FeatDefinition _, [NotNull] RulesetCharacterHero hero)
     {
         var features = new List<FeatureDefinition>();
 
@@ -54,11 +54,8 @@ internal static class FeatsValidations
 
         var hasStealthAttack = features.Any(x => x.Name.Contains(TagsDefinitions.AdditionalDamageSneakAttackTag));
 
-        if (hasStealthAttack)
-        {
-            return (true, Gui.Localize("Tooltip/&FeatPrerequisiteHasStealthAttack"));
-        }
-
-        return (false, Gui.Colorize(Gui.Localize("Tooltip/&FeatPrerequisiteHasStealthAttack"), "EA7171"));
+        return hasStealthAttack
+            ? (true, Gui.Localize("Tooltip/&FeatPrerequisiteHasStealthAttack"))
+            : (false, Gui.Colorize(Gui.Localize("Tooltip/&FeatPrerequisiteHasStealthAttack"), "EA7171"));
     }
 }
